@@ -30,7 +30,13 @@ export class RoomsComponent implements OnInit, OnDestroy {
     this._ngDestroy.next();
   }
 
-  private _initData() {
+  onSendBtnClick() {
+    this._ws
+      .emitWithAck<string>('events', 'hello')
+      .subscribe((data) => console.log(data));
+  }
+
+  private _initData(): void {
     const register = observableRegistrarFactory.call(this, this._ngDestroy);
 
     register(this._ws.onConnect$, this._onSocketConnected);

@@ -1,6 +1,7 @@
+import { Component, OnInit } from '@angular/core';
+import { WebsocketService } from '@services/websocket';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,17 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  constructor(private readonly _wsService: WebsocketService) {}
+
+  ngOnInit(): void {
+    this._wsService.connect().subscribe({
+      next: () => {
+        console.log('connected to socket server');
+      },
+      error: () => {
+        console.log('unabled to connect to socket server');
+      },
+    });
+  }
+}

@@ -11,7 +11,20 @@ export class WebsocketService {
 
   constructor() {
     this._manager = new Manager(environment.wsRemoteServiceUrl, {
-      autoConnect: false,
+      autoConnect: false
+    });
+  }
+
+  connect(): Observable<void> {
+    return new Observable<void>((subscriber) => {
+      this._manager.open((err) => {
+        if (err) {
+          return subscriber.error();
+        }
+
+        subscriber.next();
+        subscriber.complete();
+      });
     });
   }
 
