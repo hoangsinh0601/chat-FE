@@ -24,7 +24,9 @@
       "@app/*": ["./src/app/*"],
       "@configs/*": ["./src/configs/*"],
       "@environments/*": ["./src/environments/*"],
-      "@helpers/*": ["./src/shared/data/helpers/*"]
+      "@helpers/*": ["./src/shared/data/helpers/*"],
+      "@services/*": ["./src/shared/data/services/*"],
+      "@models/*": ["./src/shared/data/models/*"]
     }
   },
   "angularCompilerOptions": {
