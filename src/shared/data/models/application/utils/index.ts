@@ -1,1 +1,1 @@
-export * from './RouterEvent.model';
+export * from './_RouterEvent.model';

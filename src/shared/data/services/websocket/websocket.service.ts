@@ -1,5 +1,7 @@
 import { Observable, Subject, from } from 'rxjs';
+import { IApplicationError } from '@interfaces/application/errors';
 import { Manager, Socket } from 'socket.io-client';
+import { WSConnectError } from '@models/application/errors';
 import { environment } from '@environments/environment';
 import { Injectable } from '@angular/core';
 
@@ -18,14 +20,14 @@ export class WebsocketService {
   }
 }
 
-class IOSocket {
+export class IOSocket {
   private readonly _onConnect: Subject<void>;
   private readonly _onDisconnect: Subject<string>;
-  private readonly _onConnectError: Subject<Error>;
+  private readonly _onConnectError: Subject<IApplicationError>;
 
   readonly onConnect$: Observable<void>;
   readonly onDisconnect$: Observable<string>;
-  readonly onConnectError$: Observable<Error>;
+  readonly onConnectError$: Observable<IApplicationError>;
 
   private _id?: string;
   private _connected: boolean;
@@ -75,7 +77,7 @@ class IOSocket {
   }
 
   /**
-   * Manually disconnects the socket. In that case, the socket will not try 
+   * Manually disconnects the socket. In that case, the socket will not try
    * to reconnect.
    * @returns {IOSocket}
    */
@@ -87,20 +89,20 @@ class IOSocket {
 
   /**
    * emitting and expecting an acknowledgement from the server.
-   * @param event 
-   * @param args 
-   * @returns 
+   * @param event
+   * @param args
+   * @returns
    */
   emitWithAck<T>(event: string, ...args: any[]): Observable<T> {
     return from(this._client.emitWithAck(event, args));
   }
 
   /**
-   * Emits an event to the socket identified by the string name. Any other parameters can 
+   * Emits an event to the socket identified by the string name. Any other parameters can
    * be included. All serializable data structures are supported, including `Buffer`.
-   * @param event 
-   * @param args 
-   * @returns 
+   * @param event
+   * @param args
+   * @returns
    */
   emit(event: string, ...args: any[]): true {
     this._client.emit(event, args);
@@ -110,11 +112,11 @@ class IOSocket {
 
   /**
    * Register a new handler for the given event.
-   * @param event 
-   * @returns 
+   * @param event
+   * @returns
    */
   on<T>(event: string): Observable<T> {
-    return this._listenOn<T>(event)
+    return this._listenOn<T>(event);
   }
   //#endregion
 
@@ -131,7 +133,10 @@ class IOSocket {
     });
   }
 
-  private _bindEventListeners(_client: Socket, eventListeners: Record<string, (event: any) => void>): Socket {
+  private _bindEventListeners(
+    _client: Socket,
+    eventListeners: Record<string, (event: any) => void>
+  ): Socket {
     for (const [event, listener] of Object.entries(eventListeners)) {
       _client.on(event, listener);
     }
@@ -157,7 +162,7 @@ class IOSocket {
   }
 
   private _onSocketConnectError(error: Error): void {
-    this._onConnectError.next(error);
+    this._onConnectError.next(new WSConnectError(error.message));
     this._onSocketConnectStatusChanged(false);
   }
   //#endregion
