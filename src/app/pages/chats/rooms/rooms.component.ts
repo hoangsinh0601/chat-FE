@@ -30,17 +30,12 @@ export class RoomsComponent implements OnInit, OnDestroy {
     this._ngDestroy.next();
   }
 
-  onSendBtnClick() {    
-    this._ws
-      .emitWithAck<string>('events', 'hello')
-      .subscribe((data) => console.log(data));
-  }
-
   private _initData(): void {
     const register = observableRegistrarFactory.call(this, this._ngDestroy);
 
     register(this._ws.onConnect$, this._onSocketConnected);
     register(this._ws.onConnectError$, this._onSocketConnectError);
+    register(this._ws.on('room_list_sent'), this._onRoomListReceived);
   }
 
   private _onSocketConnected(): void {
@@ -49,5 +44,9 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
   private _onSocketConnectError(error: IApplicationError): void {
     console.log(error.code);
+  }
+
+  private _onRoomListReceived(data: any) {
+    console.log(data)
   }
 }
