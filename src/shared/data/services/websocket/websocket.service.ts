@@ -146,10 +146,7 @@ export class IOSocket {
     });
   }
 
-  private _bindEventListeners(
-    _client: Socket,
-    eventListeners: Record<string, (event: any) => void>
-  ): Socket {
+  private _bindEventListeners(_client: Socket, eventListeners: Record<string, (event: any) => void>): Socket {
     for (const [event, listener] of Object.entries(eventListeners)) {
       _client.on(event, listener);
     }

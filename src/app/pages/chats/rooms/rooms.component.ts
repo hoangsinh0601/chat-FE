@@ -16,7 +16,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   private readonly _ws: IOSocket;
 
   constructor(private readonly _wsService: WebsocketService) {
-    this._ws = this._wsService.socket('rooms');
+    this._ws = this._wsService.socket('/rooms');
     this._ngDestroy = new Subject();
   }
 
@@ -30,7 +30,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
     this._ngDestroy.next();
   }
 
-  onSendBtnClick() {
+  onSendBtnClick() {    
     this._ws
       .emitWithAck<string>('events', 'hello')
       .subscribe((data) => console.log(data));
