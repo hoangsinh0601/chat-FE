@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IOSocket, WebsocketService } from '@services/websocket';
 import { observableRegistrarFactory } from '@helpers/rxjs';
 import { IApplicationError } from '@interfaces/application/errors';
+import { ServerEvent } from '@constants/enums';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -35,7 +36,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
     register(this._ws.onConnect$, this._onSocketConnected);
     register(this._ws.onConnectError$, this._onSocketConnectError);
-    register(this._ws.on('room_list_sent'), this._onRoomListReceived);
+    register(this._ws.on(ServerEvent.ROOM_LIST_SENT), this._onRoomListReceived);
   }
 
   private _onSocketConnected(): void {

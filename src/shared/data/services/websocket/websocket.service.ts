@@ -1,4 +1,5 @@
 import { Observable, Subject, from } from 'rxjs';
+import { ClientEvent, ServerEvent } from '@constants/enums';
 import { IApplicationError } from '@interfaces/application/errors';
 import { Manager, Socket } from 'socket.io-client';
 import { WSConnectError } from '@models/application/errors';
@@ -117,7 +118,7 @@ export class IOSocket {
    * @param args
    * @returns
    */
-  emit(event: string, ...args: any[]): true {
+  emit(event: ClientEvent, ...args: any[]): true {
     this._client.emit(event, args);
 
     return true;
@@ -128,7 +129,7 @@ export class IOSocket {
    * @param event
    * @returns
    */
-  on<T>(event: string): Observable<T> {
+  on<T>(event: ServerEvent): Observable<T> {
     return this._listenOn<T>(event);
   }
   //#endregion
